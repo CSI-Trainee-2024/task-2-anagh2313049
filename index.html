@@ -13,26 +13,29 @@
     <div class="begin">
         <div id="frame1">
             <p>Track Your Reps & Time Efficiently</p>
-            <button>Begin Workout <i class="fa-regular fa-circle-play fa-lg" style="color: #000000;"></i></button>
+            <button id="begin-Workout">Begin Workout <i class="fa-regular fa-circle-play fa-lg" style="color: #000000;"></i></button>
         </div>
     </div>
     <div class="container">
         <div class="exercise-form">
             <form action="#">
-                <input type="text" placeholder="Add Your Exercise" id="Exercise">
-                <input type="number" placeholder="Number of times" id="quantity">
+                <input type="text" placeholder="Add Your Exercise" id="Exercise" required>
+                <input type="number" placeholder="Number of times" id="quantity" required>
                 <div id="TimeLimit">
                     <label for="time" style="color: #454545;">Specify Time Limit</label>
-                    <input type="number" id="hours" class="timebox" placeholder="00" min="0" max="23">
+                    <input type="number" id="hours" class="timebox" placeholder="00" min="0" max="23" required>
                     <span>:</span>
-                    <input type="number"id="minutes" class="timebox" placeholder="00" min="0" max="59">
+                    <input type="number"id="minutes" class="timebox" placeholder="00" min="0" max="59" required>
                     <span>:</span>
-                    <input type="number" id="seconds" class="timebox" placeholder="00" min="0" max="59">
+                    <input type="number" id="seconds" class="timebox" placeholder="00" min="0" max="59" required>
                 </div>
-                <button id="submitExercise">Add To Workout Plan</button>
+                <button type="button" id="submitExercise">Add To Workout Plan</button>
             </form>
-            <hr>
+            <div class="line"></div>
+            <br>
+            <div class="ExerciseSection"></div>
         </div>
+
     </div>
 
 
@@ -41,6 +44,7 @@
 
 
 
-    <script src="script.js"></script>
+    <script src="script.js">
+    </script>
 </body>
 </html>
