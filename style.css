@@ -51,7 +51,10 @@ body{
     /* height: 20vh; */
     /* background-color: red; */
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    /* justify-content: space-between; */
     align-items: center;
 
     
@@ -151,4 +154,64 @@ form label{
     font-weight: 700;
 }
 
+/* General styles */
 
+.current-exercise-display {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #FBB400;
+    border: 2px solid #000;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#showResultsButton {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+#showResults {
+    background-color: #A4F3DE;
+    padding: 1rem 2rem;
+    border: 2px solid #000;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.results-table {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #A26FE3;
+    border: 2px solid #000;
+    border-radius: 8px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.results-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.results-table th, .results-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #000;
+}
+
+.results-table th {
+    background-color: #FBB400;
+    font-weight: bold;
+}
+
+.results-table td {
+    background-color: #A4F3DE;
+}
