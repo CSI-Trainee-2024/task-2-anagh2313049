@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentExerciseIndex = 0;
     let exerciseCount = 0;
     let timerInterval;
+    let totalSeconds = 0;  // Track time remaining for current exercise
     const exerciseLimit = 5;
 
     AddToWorkoutPlan.addEventListener('click', function (e) {
@@ -32,10 +33,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const completeButton = exerciseDiv.querySelector('.complete-button');
                 completeButton.addEventListener('click', async () => {
                     if (timerInterval) clearInterval(timerInterval);
+                    const actualTimeTaken = formatTime(parseTime(time) - totalSeconds);  // Use the time of this exercise
                     exerciseDiv.classList.add('completed');
                     disableButtons();
-                    exerciseTimes.push({ name: exercise, plannedTime: time, actualTime: 'Completed Early' });
+                    
+                    // Store the actual time taken
+                    exerciseTimes.push({ name: exercise, plannedTime: time, actualTime: actualTimeTaken });
 
+                    // Move to the next exercise or end the workout
                     if (currentExerciseIndex < exercises.length - 1) {
                         await startBreak();
                         currentExerciseIndex++;
@@ -71,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function startExercise(index) {
         const currentExercise = exercises[index];
         enableCurrentCompleteButton(index);
-        let totalSeconds = parseTime(currentExercise.time);
+        totalSeconds = parseTime(currentExercise.time);  // Store the total time for the exercise
         displayTimer(currentExercise.name, totalSeconds);
 
         timerInterval = setInterval(() => {
@@ -83,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 exerciseTimes.push({
                     name: currentExercise.name,
                     plannedTime: currentExercise.time,
-                    actualTime: formatTime(parseTime(currentExercise.time) - totalSeconds)
+                    actualTime: currentExercise.time // If timer ends normally, actual time = planned time
                 });
                 disableCurrentCompleteButton(index);
 
@@ -98,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function startBreak() {
         currentExerciseDisplay.innerHTML = "Break Time: 20 seconds";
-        let breakTime = 20;
+        let breakTime = 10;
 
         return new Promise((resolve) => {
             timerInterval = setInterval(() => {
@@ -168,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         exercises.forEach(exercise => {
             exercise.completeButton.disabled = false;
         });
-    }
+    } 
 
     // Show Results Button Logic
     showResultsButton.addEventListener('click', function () {
