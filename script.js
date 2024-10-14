@@ -11,108 +11,106 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentExerciseIndex = 0;
     let exerciseCount = 0;
     let timerInterval;
-
     const exerciseLimit = 5;
 
-    // Adding Exercises to the Workout Plan
     AddToWorkoutPlan.addEventListener('click', function (e) {
         e.preventDefault(); // Prevent form submission
 
         if (validateInputs()) {
             if (exerciseCount < exerciseLimit) {
-                ExerciseSectionHandler();
+                const exercise = document.getElementById('Exercise').value;
+                const quantity = parseInt(document.getElementById('quantity').value);
+                const hours = parseInt(document.getElementById('hours').value.padStart(2, '0'));
+                const minutes = parseInt(document.getElementById('minutes').value.padStart(2, '0'));
+                const seconds = parseInt(document.getElementById('seconds').value.padStart(2, '0'));
+                const time = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                const exerciseDiv = document.createElement('div');
+                exerciseDiv.className = 'exercise-item';
+                exerciseDiv.innerHTML = `<p>${exercise} -- ×${quantity}</p><p> ${time}</p> <button class="complete-button" disabled>Complete</button>`;
+                
+                const completeButton = exerciseDiv.querySelector('.complete-button');
+                completeButton.addEventListener('click', async () => {
+                    if (timerInterval) clearInterval(timerInterval);
+                    exerciseDiv.classList.add('completed');
+                    disableButtons();
+                    exerciseTimes.push({ name: exercise, plannedTime: time, actualTime: 'Completed Early' });
+
+                    if (currentExerciseIndex < exercises.length - 1) {
+                        await startBreak();
+                        currentExerciseIndex++;
+                        await startExercise(currentExerciseIndex);
+                    } else {
+                        endWorkout();
+                    }
+                });
+
+                ExerciseSection.appendChild(exerciseDiv);
+                exercises.push({ name: exercise, quantity: quantity, time: time, completeButton: completeButton });
                 exerciseCount++;
+
+                // Clear Inputs
+                document.getElementById('Exercise').value = '';
+                document.getElementById('quantity').value = '';
+                document.getElementById('hours').value = '';
+                document.getElementById('minutes').value = '';
+                document.getElementById('seconds').value = '';
+                enableButtons();
             } else {
                 alert(`You have reached the limit of ${exerciseLimit} exercises!`);
             }
         }
     });
 
-    function ExerciseSectionHandler() {
-        // Capture User Inputs:
-        const exercise = document.getElementById('Exercise').value;
-        const quantity = parseInt(document.getElementById('quantity').value);
-        const hours = parseInt(document.getElementById('hours').value.padStart(2, '0'));
-        const minutes = parseInt(document.getElementById('minutes').value.padStart(2, '0'));
-        const seconds = parseInt(document.getElementById('seconds').value.padStart(2, '0'));
-
-        const time = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-        // Create Exercise Div
-        const exerciseDiv = document.createElement('div');
-        exerciseDiv.className = 'exercise-item';
-        exerciseDiv.innerHTML = `<p>${exercise} -- ×${quantity}</p><p> ${time}</p> <button class="complete-button">Complete</button>`;
-        
-        const completeButton = exerciseDiv.querySelector('.complete-button');
-        completeButton.addEventListener('click', function () {
-            markExerciseComplete(currentExerciseIndex, exerciseDiv);
-        });
-
-        ExerciseSection.appendChild(exerciseDiv);
-
-        // Clear Inputs
-        document.getElementById('Exercise').value = '';
-        document.getElementById('quantity').value = '';
-        document.getElementById('hours').value = '';
-        document.getElementById('minutes').value = '';
-        document.getElementById('seconds').value = '';
-
-        // Push Exercise into Array
-        exercises.push({
-            name: exercise,
-            quantity: quantity,
-            time: time,
-            completed: false
-        });
-    }
-
-    // Begin Workout
-    beginWorkoutButton.addEventListener('click', function () {
+    beginWorkoutButton.addEventListener('click', async function () {
         if (exercises.length > 0) {
-            startExercise(currentExerciseIndex);
+            await startExercise(currentExerciseIndex);
         }
     });
 
-    function startExercise(index) {
+    async function startExercise(index) {
         const currentExercise = exercises[index];
-        let totalSeconds = parseTime(currentExercise.time); 
+        enableCurrentCompleteButton(index);
+        let totalSeconds = parseTime(currentExercise.time);
         displayTimer(currentExercise.name, totalSeconds);
-    
+
         timerInterval = setInterval(() => {
             totalSeconds--;
-            displayTimer(currentExercise.name, totalSeconds); 
-    
+            displayTimer(currentExercise.name, totalSeconds);
+
             if (totalSeconds <= 0) {
-                clearInterval(timerInterval); 
+                clearInterval(timerInterval);
                 exerciseTimes.push({
-                    name: currentExercise.name, 
-                    plannedTime: currentExercise.time, 
+                    name: currentExercise.name,
+                    plannedTime: currentExercise.time,
                     actualTime: formatTime(parseTime(currentExercise.time) - totalSeconds)
                 });
-    
+                disableCurrentCompleteButton(index);
+
                 if (index < exercises.length - 1) {
-                    startBreak(index + 1); 
+                    startBreak().then(() => startExercise(index + 1));
                 } else {
-                    endWorkout(); 
+                    endWorkout();
                 }
             }
-        }, 1000); 
+        }, 1000);
     }
-    
 
-    function startBreak(nextIndex) {
+    async function startBreak() {
         currentExerciseDisplay.innerHTML = "Break Time: 20 seconds";
         let breakTime = 20;
 
-        timerInterval = setInterval(() => {
-            breakTime--;
-            currentExerciseDisplay.innerHTML = `Break Time: ${breakTime} seconds`;
+        return new Promise((resolve) => {
+            timerInterval = setInterval(() => {
+                breakTime--;
+                currentExerciseDisplay.innerHTML = `Break Time: ${breakTime} seconds`;
 
-            if (breakTime <= 0) {
-                clearInterval(timerInterval);
-                startExercise(nextIndex);
-            }
-        }, 1000);
+                if (breakTime <= 0) {
+                    clearInterval(timerInterval);
+                    resolve();
+                }
+            }, 1000);
+        });
     }
 
     function endWorkout() {
@@ -120,59 +118,6 @@ document.addEventListener('DOMContentLoaded', function () {
         showResultsButton.style.display = 'block';
     }
 
-    function markExerciseComplete(index, exerciseDiv) {
-        clearInterval(timerInterval);
-        exerciseDiv.classList.add('completed');
-        exerciseTimes.push({
-            name: exercises[index].name,
-            plannedTime: exercises[index].time,
-            actualTime: 'Completed Early'
-        });
-
-        if (index < exercises.length - 1) {
-            startBreak(index + 1);
-        } else {
-            endWorkout();
-        }
-    }
-
-    // Show Results Button Logic
-    document.getElementById('showResults').addEventListener('click', function () {
-        resultsTable.style.display = 'block';
-        resultsBody.innerHTML = exerciseTimes.map(exercise => `
-            <tr>
-                <td>${exercise.name}</td>
-                <td>${exercise.plannedTime}</td>
-                <td>${exercise.actualTime}</td>
-            </tr>
-        `).join('');
-    });
-
-    function parseTime(time) {
-        const [hours, minutes, seconds] = time.split(':').map(Number);
-        return hours * 3600 + minutes * 60 + seconds;
-    }
-
-    function displayTimer(exerciseName, totalSeconds) {
-        currentExerciseDisplay.innerHTML = `${exerciseName} - ${formatTime(totalSeconds)}`;
-    }
-
-    function startTimer(totalSeconds, onUpdate) {
-        let elapsedSeconds = 0;
-        return setInterval(() => {
-            elapsedSeconds++;
-            onUpdate(elapsedSeconds);
-        }, 1000);
-    }
-
-    function formatTime(seconds) {
-        const hrs = Math.floor(seconds / 3600);
-        const mins = Math.floor((seconds % 3600) / 60);
-        const secs = seconds % 60;
-        return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    // Validation Function
     function validateInputs() {
         const exercise = document.getElementById('Exercise').value.trim();
         const quantity = parseInt(document.getElementById('quantity').value);
@@ -184,7 +129,56 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Please enter valid inputs.');
             return false;
         }
-
         return true;
     }
+
+    function parseTime(time) {
+        const [hours, minutes, seconds] = time.split(':').map(Number);
+        return hours * 3600 + minutes * 60 + seconds;
+    }
+
+    function displayTimer(exerciseName, totalSeconds) {
+        currentExerciseDisplay.innerHTML = `${exerciseName} - ${formatTime(totalSeconds)}`;
+    }
+
+    function formatTime(seconds) {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function enableCurrentCompleteButton(index) {
+        exercises.forEach((exercise, idx) => {
+            exercise.completeButton.disabled = (idx !== index);
+        });
+    }
+
+    function disableCurrentCompleteButton(index) {
+        exercises[index].completeButton.disabled = true;
+    }
+
+    function disableButtons() {
+        exercises.forEach(exercise => {
+            exercise.completeButton.disabled = true;
+        });
+    }
+
+    function enableButtons() {
+        exercises.forEach(exercise => {
+            exercise.completeButton.disabled = false;
+        });
+    }
+
+    // Show Results Button Logic
+    showResultsButton.addEventListener('click', function () {
+        resultsTable.style.display = 'block';
+        resultsBody.innerHTML = exerciseTimes.map(exercise => `
+            <tr>
+                <td>${exercise.name}</td>
+                <td>${exercise.plannedTime}</td>
+                <td>${exercise.actualTime}</td>
+            </tr>
+        `).join('');
+    });
 });
