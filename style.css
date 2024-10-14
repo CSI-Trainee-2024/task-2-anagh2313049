@@ -4,38 +4,37 @@
     box-sizing: border-box;
 }
 
-
 body{
     background-color: #A26FE3;
 }
+
 .begin{
-    width:100%;
-    height:13vh;
-    /* border:2px solid black; */
-    /* background-color: aliceblue; */
+    width: 100%;
+    /* height: 15vh; */
     display: flex;
     justify-content: center;
     margin-top: 5vh;
     padding: 0.4rem;
 }
-#frame1{
-    height:100%;
-    width: 80%;
 
-    /* border: 2px solid black; */
+#frame1{
+    height: 100%;
+    width: 80%;
     background-color: #FBB400;
     border-radius: 12px;
     box-shadow: 5px 5px 0px 6px #000000;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding: 0.9rem;
 }
 
 #frame1 p{
-    font-family: sans-serif ;
+    font-family: sans-serif;
     font-size: 1.9rem;
     font-weight: 590;
 }
+
 #frame1 button {
     background: #A4F3DE;
     box-shadow: 2px 2px 0px 0px #000000;
@@ -45,24 +44,17 @@ body{
     font-size: 0.9rem;
     font-weight: 700;
 }
+
 .container{
     margin-top: 5vh;
     width: 100%;
-    /* height: 20vh; */
-    /* background-color: red; */
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    /* justify-content: space-between; */
-    align-items: center;
-
-    
 }
 
 .exercise-form{
     width: 80%;
-    /* height: 80%; */
     border: 2px solid black;
     display: flex;
     flex-direction: column;
@@ -72,7 +64,6 @@ body{
     box-shadow: 8px 8px 0px 6px #000000;
     border-radius: 12px;
     padding: 0.7rem;
-
 }
 
 form{
@@ -80,28 +71,13 @@ form{
     display: flex;
     justify-content: space-evenly;
     padding: 0.9rem;
-
-
 }
-#Exercise{
+
+#Exercise, #quantity, #TimeLimit{
     background-color: #A4F3DE;
     border-radius: 4px;
     border: 1px solid #000000;
     padding: 0.8rem;
-    
-}
-#quantity{
-    background-color: #A4F3DE;
-    border-radius: 4px;
-    border: 1px solid #000000;
-    padding: 0.8rem;
-}
-#TimeLimit{
-    width: 33%;
-    /* height: 5vh; */
-    border: 1px solid #000000;
-    padding: 0.8rem;
-    border-radius: 4px;
 }
 
 .timebox{
@@ -111,9 +87,11 @@ form{
     border-radius: 4px;
     padding: 0.1rem;
 }
+
 form label{
     margin-right: 2vw;
 }
+
 #submitExercise{
     background-color: #FBB400;
     box-shadow: 4px 4px 0px 0px #000000;
@@ -123,8 +101,8 @@ form label{
     font-size: 1rem;
     font-weight: 700;
 }
+
 .line{
-    /* border: 1px; */
     width: 90%;
     height: 0.6vh;
     background-color: #000000;
@@ -132,7 +110,7 @@ form label{
 
 .exercise-item{
     padding: 0.7rem 1rem;
-    width: 120vh;
+    width: 120%;
     border: 1px solid #000000;
     border-radius: 4px;
     margin-top: 2vh;
@@ -142,7 +120,7 @@ form label{
     font-family: sans-serif;
     font-size: 1rem;
     font-weight: 590;
-} 
+}
 
 .complete-button{
     background-color: #FBB400;
@@ -153,8 +131,6 @@ form label{
     font-size: 1rem;
     font-weight: 700;
 }
-
-/* General styles */
 
 .current-exercise-display {
     margin-top: 20px;
@@ -167,6 +143,7 @@ form label{
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 4px 4px 0px 0px #000000;
 }
 
 #showResultsButton {
@@ -178,33 +155,33 @@ form label{
 #showResults {
     background-color: #A4F3DE;
     padding: 1rem 2rem;
-    border: 2px solid #000;
+    border: 1px solid #000;
     border-radius: 4px;
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
+    box-shadow: 4px 4px 0px 0px #000000;
 }
 
 .results-table {
-    margin-top: 50px;
-    padding: 20px;
+    margin-top: 10vh;
+    padding: 1.5rem;
     background-color: #A26FE3;
-    border: 2px solid #000;
-    border-radius: 8px;
     width: 80%;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .results-table table {
     width: 100%;
     border-collapse: collapse;
+    border: 2px solid black;
+    border-radius: 8px;
+    box-shadow: 6px 6px 0px 0px #000000;
 }
 
 .results-table th, .results-table td {
     padding: 10px;
-    text-align: left;
-    border: 1px solid #000;
+    text-align: center;
+    border: 2px solid #000;
 }
 
 .results-table th {
@@ -214,4 +191,111 @@ form label{
 
 .results-table td {
     background-color: #A4F3DE;
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 768px) {
+    #frame1 {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    #frame1 p {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    #frame1 button {
+        font-size: 0.8rem;
+        padding: 1rem;
+    }
+
+    .exercise-form {
+        width: 90%;
+    }
+
+    form {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    #Exercise, #quantity, #TimeLimit {
+        width: 90%;
+        padding: 0.6rem;
+    }
+
+    .exercise-item {
+        width: 90%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .current-exercise-display {
+        font-size: 1.2rem;
+        padding: 15px;
+    }
+
+    .complete-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .results-table {
+        width: 90%;
+    }
+
+    .results-table th, .results-table td {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Media Query for Very Small Mobile Devices */
+@media (max-width: 480px) {
+    #frame1 {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    #frame1 p {
+        font-size: 1rem;
+        padding-bottom: 5vh;
+    }
+
+    #frame1 button {
+        font-size: 0.7rem;
+        padding: 0.8rem;
+    }
+    .container{
+        margin-top: 12vh;
+    }
+    form label{
+        font-size: 0.7rem;
+    }
+
+    #Exercise, #quantity, #TimeLimit {
+        width: 100%;
+        padding: 0.5rem;
+    }
+
+    .exercise-item {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .current-exercise-display {
+        font-size: 1rem;
+        padding: 10px;
+    }
+
+    .complete-button {
+        font-size: 0.8rem;
+    }
+
+    .results-table th, .results-table td {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
 }

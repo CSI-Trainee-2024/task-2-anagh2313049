@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function startBreak() {
         currentExerciseDisplay.innerHTML = "Break Time: 20 seconds";
-        let breakTime = 10;
+        let breakTime = 20;
 
         return new Promise((resolve) => {
             timerInterval = setInterval(() => {
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         exercises.forEach(exercise => {
             exercise.completeButton.disabled = false;
         });
-    } 
+    }
 
     // Show Results Button Logic
     showResultsButton.addEventListener('click', function () {
